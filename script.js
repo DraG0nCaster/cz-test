@@ -388,12 +388,15 @@ let result = [];
 let rightResults = [];
 let chosenResults = [];
 
-let questionAmount = 30;
+let questionAmount = localStorage.getItem('savedInput') ? localStorage.getItem('savedInput') : 30;
+const inputField = document.getElementById('inputField');
+
+inputField.value = questionAmount;
 
 const x = questions.length;
 
 if (x < questionAmount) {
-    console.error("Количество элементов в исходном массиве меньше questionAmount");
+    console.error("x < questionAmount");
 } else {
     const uniqueNumbers = Array.from({ length: x }, (_, i) => i);
 
@@ -456,129 +459,132 @@ for (let i = 1; i <= questionAmount; i++) {
     container.appendChild(questionDiv);
 }
 
-    function submitForm() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+const saveBtn = document.getElementById('saveBtn');
+saveBtn.addEventListener('click', () => localStorage.setItem('savedInput', inputField.value));
 
-        const form = document.getElementById('quizForm');
-        const formData = new FormData(form);
-        const button = document.getElementById('submit-button');
+function submitForm() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 
-        result = [];
+    const form = document.getElementById('quizForm');
+    const formData = new FormData(form);
+    const button = document.getElementById('submit-button');
 
-        for (let i = 1; i <= questionAmount; i++) {
-            const value = formData.get(`question${i}`);
-            result.push(value ? parseInt(value, 10) : null);
-        }
+    result = [];
 
-        console.log(result);
-        button.innerHTML = "";
-        checkAnswers();
-        CheckSuccess();
+    for (let i = 1; i <= questionAmount; i++) {
+        const value = formData.get(`question${i}`);
+        result.push(value ? parseInt(value, 10) : null);
     }
 
-    function checkAnswers(){
-        for(let i = 0; i <= questionAmount-1; i++){
-            if(result[i] == questions[questionsOccupied[i]][5]){
-                rightResults[i] = true;
-            }
-            else{
-                rightResults[i] = false;
-            }
-        }
+    console.log(result);
+    button.innerHTML = "";
+    checkAnswers();
+    CheckSuccess();
+}
 
-        console.log(rightResults);
-        document.querySelector('#questions-container').innerHTML = "";
-
-        for (let i = 1; i <= questionAmount; i++) {
-            const questionDiv = document.createElement('div');
-            questionDiv.classList.add('question-container');
-            const title = document.createElement('h2');
-            title.classList.add('question-title');
-            title.textContent = `${i})  `+questions[questionsOccupied[i-1]][0];
-        
-            questionDiv.appendChild(title);
-
-            try{
-                if(questions[questionsOccupied[i-1]][6].startsWith("img/")){
-                    const img = document.createElement('img');
-                    img.setAttribute('src', questions[questionsOccupied[i-1]][6]);
-                    questionDiv.appendChild(img);
-                    img.classList.add('question-img');
-                }
-            }
-            catch (error) {}
-            
-            for (let j = 1; j <= 4; j++) {
-                const answerDiv = document.createElement('div');
-                const answerA = document.createElement('a');
-                questionDiv.classList.add('answer-div');
-                answerA.classList.add('answer-a');
-                answerA.textContent = questions[questionsOccupied[i-1]][j];
-                questionDiv.appendChild(answerDiv);
-                if(questions[questionsOccupied[i-1]][j].startsWith("img/")) {
-                    const img = document.createElement('img');
-                    img.setAttribute('src', questions[questionsOccupied[i-1]][j]);
-                    answerDiv.appendChild(img);
-                    img.classList.add('answer-img');
-                }
-                else{
-                    answerDiv.appendChild(answerA);
-                }
-                if(!rightResults[i-1] && j == result[i-1]){
-                    answerDiv.style.background = "red";
-                }
-                if(j == questions[questionsOccupied[i-1]][5] && result[i-1] != null){
-                    answerDiv.style.background = "rgb(16, 156, 40)";
-                }
-                if(j == questions[questionsOccupied[i-1]][5] && result[i-1] == null){
-                    answerDiv.style.background = "rgb(98, 194, 100)";
-                }
-            }
-            container.appendChild(questionDiv);
-        }
-    }
-    
-    function CheckSuccess(){
-        let rightAnswers = 0;
-        let wrongAnswers = 0;
-        for(let i = 0; i <= questionAmount-1; i++){
-            if(rightResults[i]){
-                rightAnswers++;
-            }
-            else{
-                wrongAnswers++;
-            }
-        }
-        const topDiv = document.querySelector(".top-section-content");
-        topDiv.innerHTML = "";
-        const pRight = document.createElement('p');
-        const pWrong = document.createElement('p');
-        const pRatio = document.createElement('p');
-        const buttonRestart = document.createElement('button');
-
-        pRight.classList.add('p-top');
-        pRatio.classList.add('p-top');
-        buttonRestart.classList.add('restart-button');
-
-        pRight.textContent = "Správně jste zodpověděli "+rightAnswers+" otázek.";
-        if(rightAnswers != 0){
-            pRatio.textContent = "Váš úspěch je: "+Math.round((100/questionAmount)*rightAnswers)+"%";
+function checkAnswers(){
+    for(let i = 0; i <= questionAmount-1; i++){
+        if(result[i] == questions[questionsOccupied[i]][5]){
+            rightResults[i] = true;
         }
         else{
-            pRatio.textContent = "Váš úspěch je: "+0+"%";
+            rightResults[i] = false;
         }
-
-        topDiv.appendChild(pRight);
-        topDiv.appendChild(pRatio);
-        topDiv.appendChild(buttonRestart);
-
-        buttonRestart.textContent = "Spustit test znovu";
-        buttonRestart.setAttribute('onclick', "ResetPage()");
     }
 
-    function ResetPage(){
-        location.reload();
+    console.log(rightResults);
+    document.querySelector('#questions-container').innerHTML = "";
+
+    for (let i = 1; i <= questionAmount; i++) {
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('question-container');
+        const title = document.createElement('h2');
+        title.classList.add('question-title');
+        title.textContent = `${i})  `+questions[questionsOccupied[i-1]][0];
+    
+        questionDiv.appendChild(title);
+
+        try{
+            if(questions[questionsOccupied[i-1]][6].startsWith("img/")){
+                const img = document.createElement('img');
+                img.setAttribute('src', questions[questionsOccupied[i-1]][6]);
+                questionDiv.appendChild(img);
+                img.classList.add('question-img');
+            }
+        }
+        catch (error) {}
+        
+        for (let j = 1; j <= 4; j++) {
+            const answerDiv = document.createElement('div');
+            const answerA = document.createElement('a');
+            questionDiv.classList.add('answer-div');
+            answerA.classList.add('answer-a');
+            answerA.textContent = questions[questionsOccupied[i-1]][j];
+            questionDiv.appendChild(answerDiv);
+            if(questions[questionsOccupied[i-1]][j].startsWith("img/")) {
+                const img = document.createElement('img');
+                img.setAttribute('src', questions[questionsOccupied[i-1]][j]);
+                answerDiv.appendChild(img);
+                img.classList.add('answer-img');
+            }
+            else{
+                answerDiv.appendChild(answerA);
+            }
+            if(!rightResults[i-1] && j == result[i-1]){
+                answerDiv.style.background = "red";
+            }
+            if(j == questions[questionsOccupied[i-1]][5] && result[i-1] != null){
+                answerDiv.style.background = "rgb(16, 156, 40)";
+            }
+            if(j == questions[questionsOccupied[i-1]][5] && result[i-1] == null){
+                answerDiv.style.background = "rgb(98, 194, 100)";
+            }
+        }
+        container.appendChild(questionDiv);
     }
+}
+
+function CheckSuccess(){
+    let rightAnswers = 0;
+    let wrongAnswers = 0;
+    for(let i = 0; i <= questionAmount-1; i++){
+        if(rightResults[i]){
+            rightAnswers++;
+        }
+        else{
+            wrongAnswers++;
+        }
+    }
+    const topDiv = document.querySelector(".top-section-content");
+    topDiv.innerHTML = "";
+    const pRight = document.createElement('p');
+    const pWrong = document.createElement('p');
+    const pRatio = document.createElement('p');
+    const buttonRestart = document.createElement('button');
+
+    pRight.classList.add('p-top');
+    pRatio.classList.add('p-top');
+    buttonRestart.classList.add('restart-button');
+
+    pRight.textContent = "Správně jste zodpověděli "+rightAnswers+" otázek.";
+    if(rightAnswers != 0){
+        pRatio.textContent = "Váš úspěch je: "+Math.round((100/questionAmount)*rightAnswers)+"%";
+    }
+    else{
+        pRatio.textContent = "Váš úspěch je: "+0+"%";
+    }
+
+    topDiv.appendChild(pRight);
+    topDiv.appendChild(pRatio);
+    topDiv.appendChild(buttonRestart);
+
+    buttonRestart.textContent = "Spustit test znovu";
+    buttonRestart.setAttribute('onclick', "ResetPage()");
+}
+
+function ResetPage(){
+    location.reload();
+}
