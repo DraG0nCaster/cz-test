@@ -459,8 +459,16 @@ for (let i = 1; i <= questionAmount; i++) {
     container.appendChild(questionDiv);
 }
 
-const saveBtn = document.getElementById('saveBtn');
-saveBtn.addEventListener('click', () => localStorage.setItem('savedInput', inputField.value));
+function questionSetAmount(){
+    if(inputField.value > 0 && inputField.value < questions.length){
+        localStorage.setItem('savedInput', inputField.value);
+        ResetPage();
+    }
+    else{
+        alert("Neplatný počet otázek.");
+        inputField.value = questionAmount;
+    }
+}
 
 function submitForm() {
     window.scrollTo({

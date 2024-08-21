@@ -107,11 +107,23 @@ body{
     border: none;
     background-color: rgb(137 96 208); 
     font-size: 25px;
+    margin-bottom: 30px;
 }
 
 .restart-button:hover{
     background-color: rgb(170, 130, 238); 
 }
+
+#saveBtn{
+    background-color: rgb(137 96 208); 
+    border: none;
+    padding: 3px 15px;
+}
+
+#saveBtn:hover{
+    background-color: rgb(170, 130, 238); 
+}
+
 
 @media(max-width: 1050px){
     .content{

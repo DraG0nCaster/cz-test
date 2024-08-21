@@ -8,23 +8,23 @@
 </head>
 <body>
     <div>
-        <form id="quizForm">
-            <div class="content">
-                <div class="top-section">
-                    <h1>PROCVIČOVÁNÍ TESTOVÝCH ÚLOH K TESTU NA OBČANSTVÍ</h1>
-                    <div class="top-section-content">
-                        <p>aktuální na rok 2024</p>
-                        <p><i>Momentálně se stránka nachází na fázi testování, prosíme informovat o chybach v úlohach nebo systému.</i></p>
-                    </div>         
+        <div class="content">
+            <div class="top-section">
+                <h1>PROCVIČOVÁNÍ TESTOVÝCH ÚLOH K TESTU NA OBČANSTVÍ</h1>
+                <div class="top-section-content">
+                    <p>aktuální na rok 2024</p>
+                    <p><i>Momentálně se stránka nachází na fázi testování, prosíme informovat o chybach v úlohach nebo systému.</i></p>
+                </div>         
                     
-                    <input type="text" id="inputField" placeholder="Введите текст">
-                    <button id="saveBtn">Сохранить</button>
-
-                </div>
-                <div id="questions-container"></div>
-                <div id="submit-button"><button type="button" onclick="submitForm()">Zkontrolovat</button></div>
+                <a>Počet otázek:</a>
+                <input type="text" id="inputField" >
+                <button id="saveBtn" onclick="questionSetAmount()">Aplikovat</button>
             </div>
+        <form id="quizForm">
+            <div id="questions-container"></div>
+            <div id="submit-button"><button type="button" onclick="submitForm()">Zkontrolovat</button></div>
         </form>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
